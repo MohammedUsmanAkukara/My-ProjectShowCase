@@ -16,7 +16,7 @@ export default function App() {
       <nav className="sticky top-0 z-50 bg-app-bg/80 backdrop-blur-lg border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="text-2xl font-black tracking-tighter text-white">
-            {profile.name.split(' ')[0]}<span className="text-brand-red">.</span>
+            {profile.name}<span className="text-brand-red">.</span>
           </div>
           <div className="hidden md:flex gap-8 font-semibold text-sm text-slate-400">
             <a href="#work" className="hover:text-brand-blue transition-colors">Work</a>
