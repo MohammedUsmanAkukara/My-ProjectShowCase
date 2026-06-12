@@ -33,6 +33,12 @@ html {
   background: var(--color-brand-red);
 }
 
+/* Add this below your scrollbar CSS */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @theme {
   /* Deep Blue Backgrounds */
   --color-app-bg: #050B14;       

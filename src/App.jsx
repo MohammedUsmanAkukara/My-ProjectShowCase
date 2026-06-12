@@ -1,16 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import portfolioData from './data/portfolioData.json';
 
 export default function App() {
   const { profile, projects, categories } = portfolioData;
   const [activeFilter, setActiveFilter] = useState('All');
+  
+  // 1. Add Loading State
+  const [isLoading, setIsLoading] = useState(true);
 
+  // 2. Set a timer to hide the preloader after 2.5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2500); // 2500 milliseconds = 2.5 seconds
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Filter Logic
   const filteredProjects = projects.filter(project => 
     activeFilter === 'All' ? true : project.category === activeFilter
   );
 
+  // 3. The Coder Preloader UI
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-app-bg flex flex-col items-center justify-center font-mono selection:bg-brand-red selection:text-white">
+        <div className="text-center">
+          {/* Glowing Brackets and Name */}
+          <div className="text-4xl md:text-6xl font-black mb-6 flex items-center justify-center gap-4">
+            <span className="text-slate-700">{"{"}</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue animate-pulse">
+              {profile.name.split(' ')[0].toUpperCase()}
+            </span>
+            <span className="text-slate-700">{"}"}</span>
+          </div>
+          
+          {/* Terminal Typing Effect */}
+          <div className="flex items-center justify-center gap-2 text-brand-blue text-sm md:text-base">
+            <span className="text-brand-red">~</span>
+            <span className="text-slate-400">/portfolio</span>
+            <span className="text-brand-blue">❯</span>
+            <span className="text-slate-300 animate-pulse">Initializing_Systems...</span>
+            {/* Blinking Cursor */}
+            <span className="w-2.5 h-5 bg-brand-blue animate-ping ml-1"></span>
+          </div>
+
+          {/* Loading Bar */}
+          <div className="mt-8 w-64 h-1 bg-slate-800 rounded-full overflow-hidden mx-auto">
+            <div className="h-full bg-gradient-to-r from-brand-red to-brand-blue animate-[spin_2s_linear_infinite] w-1/2"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 4. The Main Application (Runs after isLoading becomes false)
   return (
-    <div className="min-h-screen bg-app-bg text-slate-300 font-sans selection:bg-brand-red selection:text-white">
+    <div className="min-h-screen bg-app-bg text-slate-300 font-sans selection:bg-brand-red selection:text-white animate-[fadeIn_0.5s_ease-in-out]">
       
       {/* Crisp Dark Navigation */}
       <nav className="sticky top-0 z-50 bg-app-bg/80 backdrop-blur-lg border-b border-slate-800">
@@ -20,7 +67,6 @@ export default function App() {
           </div>
           <div className="hidden md:flex gap-8 font-semibold text-sm text-slate-400">
             <a href="#work" className="hover:text-brand-blue transition-colors">Work</a>
-            <a href="#about" className="hover:text-brand-blue transition-colors">About</a>
             <a href="#contact" className="hover:text-brand-blue transition-colors">Contact</a>
           </div>
           <a href="#contact" className="px-5 py-2.5 bg-brand-blue text-white text-sm font-bold rounded-lg hover:bg-brand-red transition-all shadow-lg shadow-brand-blue/20">
