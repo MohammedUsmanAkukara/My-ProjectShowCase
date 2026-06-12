@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+html {
+    scroll-behavior: smooth;/* Firefox Custom Scrollbar */
+  scrollbar-color: var(--color-brand-blue) var(--color-app-surface);
+  scrollbar-width: thin;
+}
+
+/* --- WebKit Custom Scrollbar (Chrome, Edge, Safari) --- */
+
+/* Width of the scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track (the background of the scrollbar) */
+::-webkit-scrollbar-track {
+  background: var(--color-app-surface);
+}
+
+/* Handle (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-blue);
+  border-radius: 8px;
+  border: 2px solid var(--color-app-surface); /* Adds a nice padding effect */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-red);
+}
+
+@theme {
+  /* Deep Blue Backgrounds */
+  --color-app-bg: #050B14;       
+  --color-app-surface: #0F172A;  
+  
+  /* Energetic Accents */
+  --color-brand-red: #E63946;    
+  --color-brand-blue: #3B82F6;   
+  
+  /* Subtle Transparent Tones for Badges/Hover states */
+  --color-red-dim: rgba(230, 57, 70, 0.1);
+  --color-blue-dim: rgba(59, 130, 246, 0.1);
+  
+  /* Fonts */
+  --font-sans: "Inter", sans-serif;
+}

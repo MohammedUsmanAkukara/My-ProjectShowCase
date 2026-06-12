@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "title": "Cosmochart - Sci-Fi Navigation",
+    "type": "WEB APP",
+    "tags": ["React", "Three.js", "Web Audio"],
+    "image": "https://source.unsplash.com/random/400x300?space",
+    "link": "#"
+  },
+  {
+    "id": 2,
+    "title": "Cricmetrics - Professional Analytics",
+    "type": "DASHBOARD",
+    "tags": ["React", "D3.js", "Tailwind CSS"],
+    "image": "https://source.unsplash.com/random/400x300?data",
+    "link": "#"
+  },
+  {
+    "id": 3,
+    "title": "NextGen E-Commerce Suite",
+    "type": "WEB APP",
+    "tags": ["Next.js", "Tailwind CSS"],
+    "image": "https://source.unsplash.com/random/400x300?ecommerce",
+    "link": "#"
+  }
+]
