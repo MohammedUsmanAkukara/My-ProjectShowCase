@@ -16,8 +16,15 @@
       "category": "Website",
       "description": "Utsav Events is a premium, cinematic React web application designed for luxury Indian event management, featuring a sleek dark-mode editorial aesthetic with champagne-gold accents.",
       "tags": ["React", "Framer Motion", "Tailwind CSS"],
-      "liveUrl": "https://utsav-event-portfolio.vercel.app/",
-      "githubUrl": "https://github.com/MohammedUsmanAkukara/Utsav-Event-Website.git"
+      "liveUrl": "https://utsav-event-portfolio.vercel.app/"
+    },
+    {
+      "id": 2,
+      "title": "EduAcademy",
+      "category": "Website",
+      "description": "EduAcademy provides a world-class education focused on innovation, character building, and academic excellence in a supportive environment.",
+      "tags": ["React", "Framer Motion", "Tailwind CSS", "Lucide React"],
+      "liveUrl": "https://edu-academy-one.vercel.app/"
     }
   ]
 }
