@@ -5,14 +5,14 @@ export default function App() {
   const { profile, projects, categories } = portfolioData;
   const [activeFilter, setActiveFilter] = useState('All');
   
-  // 1. Add Loading State
+  // 1. Loading State
   const [isLoading, setIsLoading] = useState(true);
 
-  // 2. Set a timer to hide the preloader after 2.5 seconds
+  // 2. Preloader Timer
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2500); // 2500 milliseconds = 2.5 seconds
+    }, 2500); 
     
     return () => clearTimeout(timer);
   }, []);
@@ -27,7 +27,6 @@ export default function App() {
     return (
       <div className="min-h-screen bg-app-bg flex flex-col items-center justify-center font-mono selection:bg-brand-red selection:text-white">
         <div className="text-center">
-          {/* Glowing Brackets and Name */}
           <div className="text-4xl md:text-6xl font-black mb-6 flex items-center justify-center gap-4">
             <span className="text-slate-700">{"{"}</span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue animate-pulse">
@@ -36,17 +35,14 @@ export default function App() {
             <span className="text-slate-700">{"}"}</span>
           </div>
           
-          {/* Terminal Typing Effect */}
           <div className="flex items-center justify-center gap-2 text-brand-blue text-sm md:text-base">
             <span className="text-brand-red">~</span>
             <span className="text-slate-400">/portfolio</span>
             <span className="text-brand-blue">❯</span>
             <span className="text-slate-300 animate-pulse">Initializing_Systems...</span>
-            {/* Blinking Cursor */}
             <span className="w-2.5 h-5 bg-brand-blue animate-ping ml-1"></span>
           </div>
 
-          {/* Loading Bar */}
           <div className="mt-8 w-64 h-1 bg-slate-800 rounded-full overflow-hidden mx-auto">
             <div className="h-full bg-gradient-to-r from-brand-red to-brand-blue animate-[spin_2s_linear_infinite] w-1/2"></div>
           </div>
@@ -55,15 +51,15 @@ export default function App() {
     );
   }
 
-  // 4. The Main Application (Runs after isLoading becomes false)
+  // 4. Main Application
   return (
     <div className="min-h-screen bg-app-bg text-slate-300 font-sans selection:bg-brand-red selection:text-white animate-[fadeIn_0.5s_ease-in-out]">
       
-      {/* Crisp Dark Navigation */}
+      {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-app-bg/80 backdrop-blur-lg border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="text-2xl font-black tracking-tighter text-white">
-            {profile.name}<span className="text-brand-red">.</span>
+            {profile.name.split(' ')[0]}<span className="text-brand-red">.</span>
           </div>
           <div className="hidden md:flex gap-8 font-semibold text-sm text-slate-400">
             <a href="#work" className="hover:text-brand-blue transition-colors">Work</a>
@@ -75,7 +71,7 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Energetic Red & Blue Hero Section */}
+      {/* Hero Section */}
       <header className="relative overflow-hidden pt-24 pb-32">
         <div className="max-w-7xl mx-auto px-6 relative z-10 grid md:grid-cols-2 gap-12 items-center">
           <div>
@@ -101,7 +97,6 @@ export default function App() {
             </div>
           </div>
           
-          {/* Geometric Decor - Red and Blue Glows */}
           <div className="relative h-[500px] w-full hidden md:block">
             <div className="absolute top-10 right-10 w-72 h-72 bg-brand-blue rounded-3xl rotate-12 opacity-20 blur-xl"></div>
             <div className="absolute bottom-10 left-10 w-80 h-80 bg-brand-red rounded-full opacity-10 mix-blend-screen blur-2xl"></div>
@@ -118,7 +113,7 @@ export default function App() {
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
             <div>
               <h2 className="text-4xl font-black text-white mb-4">Selected Works</h2>
-              <p className="text-slate-400 font-medium">A showcase of recent functional web designs.</p>
+              <p className="text-slate-400 font-medium">A showcase of recent functional web designs & panels.</p>
             </div>
             
             {/* Filter Buttons */}
@@ -143,7 +138,6 @@ export default function App() {
             {filteredProjects.map((project) => (
               <div key={project.id} className="group flex flex-col bg-app-bg rounded-2xl border border-slate-800 overflow-hidden hover:border-brand-blue/50 transition-all duration-300 hover:-translate-y-1 shadow-lg">
                 
-                {/* Image Placeholder area */}
                 <div className="relative aspect-[16/9] bg-slate-900 overflow-hidden border-b border-slate-800 flex items-center justify-center">
                    <div className="absolute inset-0 bg-gradient-to-br from-app-surface to-app-bg group-hover:scale-105 transition-transform duration-700"></div>
                    <h3 className="relative z-10 text-2xl font-black text-slate-700 group-hover:text-brand-blue transition-colors duration-300">
@@ -166,20 +160,29 @@ export default function App() {
                     ))}
                   </div>
 
-                  {/* Links */}
-                  <div className="flex items-center gap-6 pt-6 border-t border-slate-800">
-                    <a href={project.liveUrl} className="flex items-center gap-2 text-sm font-bold text-white hover:text-brand-red transition-colors">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                      Live Demo
-                    </a>
-                    <a href={project.githubUrl} className="flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-brand-blue transition-colors">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                      </svg>
-                      Source Code
-                    </a>
+                  {/* DYNAMIC LINKS SECTION */}
+                  <div className="flex items-center gap-4 pt-6 border-t border-slate-800">
+                    
+                    {/* Primary Button (Visit Website OR Open Panel) */}
+                    {project.liveUrl && (
+                      <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-bold text-white hover:text-brand-red transition-colors">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        {project.category === 'Panel' ? 'Open Panel' : 'Visit Website'}
+                      </a>
+                    )}
+
+                    {/* Secondary Button (Admin Panel - ONLY visible if category is Website / Admin Panel) */}
+                    {project.category === 'Website / Admin Panel' && project.panelUrl && (
+                      <a href={project.panelUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-brand-blue transition-colors">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        Admin Panel
+                      </a>
+                    )}
+
                   </div>
                 </div>
               </div>

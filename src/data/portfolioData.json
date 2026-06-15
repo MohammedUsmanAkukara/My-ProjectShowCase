@@ -8,7 +8,7 @@
     "github": "https://github.",
     "linkedin": "https://linkedin.com"
   },
-  "categories": ["All", "Web App", "UI/UX", "Dashboard"],
+  "categories": ["All", "Web App", "UI/UX", "Website / Admin Panel", "Dashboard"],
   "projects": [
     {
       "id": 1,
@@ -29,10 +29,11 @@
     {
       "id": 3,
       "title": "CA Firm",
-      "category": "Website",
+      "category": "Website / Admin Panel",
       "description": "We understand that modern businesses operate in a complex, ever-changing regulatory environment. Our mission is to simplify this complexity, allowing founders and management to focus on what they do best: growing their business.",
       "tags": ["React", "Framer Motion", "Tailwind CSS", "Lucide React"],
-      "liveUrl": "https://ca-firm-frontend.vercel.app/"
+      "liveUrl": "https://ca-firm-frontend.vercel.app/",
+      "panelUrl": "https://ca-firm-frontend.vercel.app/admin/login"
     }
   ]
 }
