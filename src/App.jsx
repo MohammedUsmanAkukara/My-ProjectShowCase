@@ -87,12 +87,26 @@ export default function App() {
             <p className="text-lg text-slate-400 mb-10 max-w-lg font-medium leading-relaxed">
               I'm {profile.name}, a {profile.title} based in {profile.location}. I engineer high-performance web applications with a focus on modern, impactful design.
             </p>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <a href="#work" className="px-8 py-4 bg-brand-red text-white font-bold rounded-xl hover:opacity-90 transition-all transform hover:-translate-y-1 shadow-xl shadow-brand-red/20">
                 View Projects
               </a>
               <a href="#contact" className="px-8 py-4 bg-transparent text-white font-bold rounded-xl border-2 border-brand-blue hover:bg-blue-dim transition-all">
                 Contact Me
+              </a>
+              
+              {/* NAYA RESUME DOWNLOAD BUTTON */}
+              <a 
+                href={profile.resumeUrl}
+                download
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex items-center gap-2 px-6 py-4 bg-app-surface text-slate-300 font-bold rounded-xl border border-slate-700 hover:text-white hover:border-brand-blue hover:shadow-lg hover:shadow-brand-blue/10 transition-all"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Resume
               </a>
             </div>
           </div>
