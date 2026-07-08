@@ -35,6 +35,14 @@
       "tags": ["React", "Framer Motion", "Tailwind CSS", "Lucide React"],
       "liveUrl": "https://ca-firm-frontend.vercel.app/",
       "panelUrl": "https://ca-firm-frontend.vercel.app/admin/login"
+    },
+    {
+      "id": 4,
+      "title": "MultiPurpose Portfolio",
+      "category": "Website / Admin Panel",
+      "description": "A multipurpose portfolio website built with React, Tailwind CSS, and Lucide React, showcasing various projects and skills in a visually appealing manner.",
+      "tags": ["React", "Tailwind CSS", "Lucide React"],
+      "liveUrl": "https://portfolio-lime-five-10.vercel.app/"
     }
   ]
 }
