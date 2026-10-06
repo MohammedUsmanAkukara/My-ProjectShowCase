@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Globe, Database, Layout, Rocket, ArrowRight, Server, Code2, 
-  Edit3, Plus, X, Lock, Loader2, Trash2, Smartphone, PenTool, Search
+  Code2, Globe, Database, Smartphone, Layout, Plus, 
+  Edit3, Trash2, X, Lock, Loader2, Sparkles 
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-// --- DYNAMIC ICON COMPONENT ---
-// Ye string name leta hai aur asli Lucide Icon return karta hai
-const IconRenderer = ({ iconName, size = 32, strokeWidth = 1.5 }) => {
+// Helper function to render icons dynamically
+const getIcon = (iconName) => {
   const icons = {
-    Globe: <Globe size={size} strokeWidth={strokeWidth} />,
-    Layout: <Layout size={size} strokeWidth={strokeWidth} />,
-    Database: <Database size={size} strokeWidth={strokeWidth} />,
-    Rocket: <Rocket size={size} strokeWidth={strokeWidth} />,
-    Server: <Server size={size} strokeWidth={strokeWidth} />,
-    Code2: <Code2 size={size} strokeWidth={strokeWidth} />,
-    Smartphone: <Smartphone size={size} strokeWidth={strokeWidth} />,
-    PenTool: <PenTool size={size} strokeWidth={strokeWidth} />,
-    Search: <Search size={size} strokeWidth={strokeWidth} />
+    Code2: <Code2 size={32} strokeWidth={1.5} />,
+    Globe: <Globe size={32} strokeWidth={1.5} />,
+    Database: <Database size={32} strokeWidth={1.5} />,
+    Smartphone: <Smartphone size={32} strokeWidth={1.5} />,
+    Layout: <Layout size={32} strokeWidth={1.5} />,
   };
-  return icons[iconName] || <Code2 size={size} strokeWidth={strokeWidth} />;
+  return icons[iconName] || <Sparkles size={32} strokeWidth={1.5} />;
 };
 
 const Services = () => {
@@ -36,20 +30,23 @@ const Services = () => {
 
   // --- ADD/EDIT MODAL STATES ---
   const [showFormModal, setShowFormModal] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false); // check agar purana service edit ho raha hai
+  const [isUpdating, setIsUpdating] = useState(false);
   const [currentId, setCurrentId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
-    title: '', description: '', iconName: 'Globe', color: 'text-blue-500', bgColor: 'bg-blue-50', tags: ''
+    title: '', description: '', icon: 'Code2'
   });
+
+  const API_URL = 'https://portfolio-backend-31zk.vercel.app';
 
   // 1. Fetch Data & Verify Token
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchServices = async () => {
       try {
-        const response = await axios.get('https://portfolio-backend-31zk.vercel.app/api/services');
-        if (response.data.success) {
-          setServices(response.data.data);
+        const res = await axios.get(`${API_URL}/api/services`);
+        if (res.data.success) {
+          setServices(res.data.data);
         }
       } catch (error) {
         console.error("Error fetching services:", error);
@@ -62,9 +59,7 @@ const Services = () => {
       const token = localStorage.getItem('admin_jwt_token');
       if (token) {
         try {
-          await axios.get('https://portfolio-backend-31zk.vercel.app/api/auth/verify', {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          await axios.get(`${API_URL}/api/auth/verify`, { headers: { Authorization: `Bearer ${token}` } });
           setIsEditing(true);
         } catch (error) {
           localStorage.removeItem('admin_jwt_token');
@@ -72,11 +67,11 @@ const Services = () => {
       }
     };
 
-    fetchData();
+    fetchServices();
     verifyToken();
   }, []);
 
-  // 2. Secret Login Logic (5 Clicks)
+  // 2. Secret Login Logic
   useEffect(() => {
     if (clickCount > 0) {
       const timer = setTimeout(() => setClickCount(0), 2000);
@@ -85,13 +80,9 @@ const Services = () => {
   }, [clickCount]);
 
   const handleSecretClick = () => {
-    setClickCount((prev) => {
-      const newCount = prev + 1;
-      if (newCount === 5) {
-        setShowAuthModal(true);
-        return 0;
-      }
-      return newCount;
+    setClickCount(prev => {
+      if (prev + 1 === 5) { setShowAuthModal(true); return 0; }
+      return prev + 1;
     });
   };
 
@@ -99,9 +90,9 @@ const Services = () => {
     e.preventDefault();
     setAuthError('');
     try {
-      const response = await axios.post('https://portfolio-backend-31zk.vercel.app/api/auth/login', { passcode });
-      if (response.data.success) {
-        localStorage.setItem('admin_jwt_token', response.data.token);
+      const res = await axios.post(`${API_URL}/api/auth/login`, { passcode });
+      if (res.data.success) {
+        localStorage.setItem('admin_jwt_token', res.data.token);
         setIsEditing(true);
         setShowAuthModal(false);
         setPasscode('');
@@ -116,10 +107,14 @@ const Services = () => {
     setIsEditing(false);
   };
 
-  // 3. Form Handlers (Add, Edit, Delete)
+  // 3. Form Handlers
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleOpenAdd = () => {
     setIsUpdating(false);
-    setFormData({ title: '', description: '', iconName: 'Globe', color: 'text-blue-500', bgColor: 'bg-blue-50', tags: '' });
+    setFormData({ title: '', description: '', icon: 'Code2' });
     setShowFormModal(true);
   };
 
@@ -129,10 +124,7 @@ const Services = () => {
     setFormData({
       title: service.title,
       description: service.description,
-      iconName: service.iconName,
-      color: service.color,
-      bgColor: service.bgColor,
-      tags: service.tags.join(', ') // Array to comma-separated string
+      icon: service.icon || 'Code2'
     });
     setShowFormModal(true);
   };
@@ -141,236 +133,177 @@ const Services = () => {
     if (window.confirm("Are you sure you want to delete this service?")) {
       try {
         const token = localStorage.getItem('admin_jwt_token');
-        await axios.delete(`https://portfolio-backend-31zk.vercel.app/api/services/${id}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await axios.delete(`${API_URL}/api/services/${id}`, { headers: { Authorization: `Bearer ${token}` } });
         setServices(services.filter(s => s._id !== id));
       } catch (error) {
-        alert("Failed to delete.");
+        alert("Delete failed.");
       }
     }
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       const token = localStorage.getItem('admin_jwt_token');
-      const payload = {
-        ...formData,
-        tags: formData.tags.split(',').map(tag => tag.trim()).filter(t => t !== '')
-      };
-
       if (isUpdating) {
-        // Update API
-        const response = await axios.put(`https://portfolio-backend-31zk.vercel.app/api/services/${currentId}`, payload, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setServices(services.map(s => s._id === currentId ? response.data.data : s));
+        const res = await axios.put(`${API_URL}/api/services/${currentId}`, formData, { headers: { Authorization: `Bearer ${token}` } });
+        setServices(services.map(s => s._id === currentId ? res.data.data : s));
       } else {
-        // Add API
-        const response = await axios.post('https://portfolio-backend-31zk.vercel.app/api/services', payload, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setServices([...services, response.data.data]);
+        const res = await axios.post(`${API_URL}/api/services`, formData, { headers: { Authorization: `Bearer ${token}` } });
+        setServices([...services, res.data.data]);
       }
       setShowFormModal(false);
     } catch (error) {
-      alert("Error saving service");
+      alert("Error saving service.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center bg-[#fafcff]"><Loader2 className="animate-spin text-blue-600" size={40} /></div>;
-  }
+  if (loading) return <div className="min-h-screen flex items-center justify-center bg-[#fafcff]"><Loader2 className="animate-spin text-blue-600" size={40} /></div>;
 
   return (
-    <div className="bg-[#fafcff] min-h-screen font-sans selection:bg-blue-200 selection:text-blue-900 pb-24 relative">
+    <div className="bg-[#fafcff] min-h-screen font-sans selection:bg-blue-200 selection:text-blue-900 pb-16 md:pb-24 relative">
       
       {/* EDIT MODE FLOATING BADGE */}
       {isEditing && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white p-4 rounded-2xl shadow-2xl flex items-center gap-4 animate-in slide-in-from-bottom-5">
-          <div className="flex items-center gap-2 font-bold">
-            <span className="relative flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span></span>
-            Edit Mode Active
+        <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 bg-slate-900 text-white p-3 md:p-4 rounded-2xl shadow-2xl flex items-center gap-3 md:gap-4 animate-in slide-in-from-bottom-5">
+          <div className="flex items-center gap-2 font-bold text-sm md:text-base">
+            <span className="relative flex h-2.5 w-2.5 md:h-3 md:w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span className="relative inline-flex rounded-full h-full w-full bg-emerald-500"></span></span>
+            Edit Mode
           </div>
-          <button onClick={handleLogout} className="bg-white/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors">Exit</button>
+          <button onClick={handleLogout} className="bg-white/10 hover:bg-red-500/20 text-red-400 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-semibold transition-colors">Exit</button>
         </div>
       )}
 
-      {/* 1. PAGE HEADER */}
-      <section className="pt-32 px-6 lg:px-8 max-w-7xl mx-auto flex flex-col items-center text-center mb-16 relative">
-        <div className="absolute top-10 right-1/3 w-[400px] h-[400px] bg-indigo-400/10 rounded-full blur-[100px] pointer-events-none"></div>
-        <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tighter mb-6 relative z-10">
-          What I <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-            Bring to the Table
-            {/* HIDDEN SECRET TRIGGER (.) */}
-            <span onClick={handleSecretClick} className="cursor-default text-slate-900 select-none">.</span>
-          </span>
+      {/* HEADER SECTION - Responsive */}
+      <section className="pt-24 md:pt-32 px-6 lg:px-8 max-w-7xl mx-auto flex flex-col items-center text-center mb-10 md:mb-16 relative">
+        <div className="absolute top-0 right-1/3 w-[300px] md:w-[400px] h-[300px] md:h-[400px] bg-indigo-400/10 rounded-full blur-[80px] md:blur-[100px] pointer-events-none"></div>
+        
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-600 font-bold text-[10px] md:text-xs tracking-wide uppercase mb-4 md:mb-6">
+          <Sparkles size={14} className="md:w-4 md:h-4" /> Solutions
+        </div>
+
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-slate-900 tracking-tighter mb-4 md:mb-6 relative z-10">
+          My <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Services<span onClick={handleSecretClick} className="cursor-default text-transparent select-none">.</span></span>
         </h1>
-        <p className="text-xl text-slate-500 max-w-2xl font-medium relative z-10 mb-8">
-          Comprehensive digital solutions built with modern technologies, focusing on performance, scalability, and exceptional user experience.
+        <p className="text-base md:text-xl text-slate-500 max-w-2xl font-medium relative z-10 mb-6 md:mb-8">
+          Comprehensive digital solutions tailored to your business needs. From robust backend systems to intuitive frontend interfaces.
         </p>
 
-        {/* ADD NEW SERVICE BUTTON (Visible only to Admin) */}
         {isEditing && (
-          <button 
-            onClick={handleOpenAdd}
-            className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-slate-900/20 transition-all z-20"
-          >
-            <Plus size={20} /> Add New Service
+          <button onClick={handleOpenAdd} className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-3 md:px-6 md:py-3.5 rounded-xl text-sm md:text-base font-bold shadow-lg shadow-slate-900/20 transition-all z-20">
+            <Plus size={18} className="md:w-5 md:h-5" /> Add New Service
           </button>
         )}
       </section>
 
-      {/* 2. SERVICES GRID (Dynamic) */}
-      <section className="px-6 lg:px-8 max-w-7xl mx-auto mb-24">
+      {/* SERVICES GRID - Responsive (1 col -> 2 col -> 3 col) */}
+      <section className="px-6 lg:px-8 max-w-7xl mx-auto">
         {services.length === 0 ? (
-           <div className="text-center text-slate-500 font-medium text-lg mt-10">
-             No services found. Log in to add some!
-           </div>
+          <div className="text-center py-20 text-slate-500 font-medium text-base md:text-lg">No services found. Add some!</div>
         ) : (
-          <div className="grid md:grid-cols-2 gap-6">
-            {services.map((service) => (
-              <div key={service._id} className="bg-white p-10 md:p-12 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 group hover:-translate-y-1 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500 flex flex-col h-full relative">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {services.map(service => (
+              <div key={service._id} className="bg-white p-6 md:p-8 lg:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative group hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300">
                 
-                {/* ADMIN CARD CONTROLS */}
+                {/* ADMIN CONTROLS OVERLAY */}
                 {isEditing && (
-                  <div className="absolute top-6 right-6 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => handleOpenEdit(service)} className="bg-blue-50 text-blue-600 p-2.5 rounded-xl hover:bg-blue-600 hover:text-white transition-colors"><Edit3 size={18} /></button>
-                    <button onClick={() => handleDelete(service._id)} className="bg-red-50 text-red-500 p-2.5 rounded-xl hover:bg-red-500 hover:text-white transition-colors"><Trash2 size={18} /></button>
+                  <div className="absolute top-4 right-4 z-30 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                    <button onClick={() => handleOpenEdit(service)} className="bg-blue-50 text-blue-600 p-2 md:p-2.5 rounded-xl hover:bg-blue-600 hover:text-white shadow-sm transition-colors"><Edit3 size={16} className="md:w-5 md:h-5" /></button>
+                    <button onClick={() => handleDelete(service._id)} className="bg-red-50 text-red-500 p-2 md:p-2.5 rounded-xl hover:bg-red-500 hover:text-white shadow-sm transition-colors"><Trash2 size={16} className="md:w-5 md:h-5" /></button>
                   </div>
                 )}
-
-                <div className={`w-16 h-16 rounded-2xl ${service.bgColor} ${service.color} flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500`}>
-                  <IconRenderer iconName={service.iconName} />
+                
+                <div className="w-14 h-14 md:w-16 md:h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 md:mb-8 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                  {getIcon(service.icon)}
                 </div>
                 
-                <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight group-hover:text-blue-600 transition-colors duration-300">
+                <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-3 md:mb-4 tracking-tight group-hover:text-blue-600 transition-colors">
                   {service.title}
                 </h3>
                 
-                <p className="text-slate-600 leading-relaxed text-lg mb-8 flex-grow font-medium">
+                <p className="text-slate-500 text-sm md:text-base font-medium leading-relaxed">
                   {service.description}
                 </p>
-                
-                <div className="flex flex-wrap gap-2 mt-auto pt-6 border-t border-slate-100">
-                  {service.tags.map((tag, index) => (
-                    <span key={index} className="text-sm font-semibold text-slate-600 bg-slate-50 border border-slate-100 px-4 py-2 rounded-xl">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
               </div>
             ))}
           </div>
         )}
       </section>
 
-      {/* 3. WORKFLOW / TECH HIGHLIGHT */}
-      <section className="px-6 lg:px-8 max-w-7xl mx-auto mb-24">
-        <div className="bg-slate-900 rounded-[3rem] p-12 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl">
-          <div className="absolute -left-20 top-0 w-64 h-64 bg-blue-600/30 blur-[80px] rounded-full pointer-events-none"></div>
-          
-          <div className="relative z-10 md:w-1/2">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight">Need a Custom Solution?</h2>
-            <p className="text-slate-300 text-lg mb-8 leading-relaxed">
-              Whether you need a dynamic retail inventory dashboard or a high-performance e-commerce backend, I architect systems that align perfectly with your business goals.
-            </p>
-            <Link to="/contact" className="group bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl font-bold transition-all inline-flex items-center gap-3 shadow-lg shadow-blue-600/30">
-              Request a Quote <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-          
-          <div className="relative z-10 md:w-1/2 grid grid-cols-2 gap-4">
-            <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/10 flex flex-col items-center text-center">
-              <Server className="text-blue-400 mb-3" size={32} />
-              <span className="text-white font-semibold">Scalable</span>
-            </div>
-            <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/10 flex flex-col items-center text-center mt-8">
-              <Code2 className="text-emerald-400 mb-3" size={32} />
-              <span className="text-white font-semibold">Clean Code</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* --- HIDDEN ADMIN AUTH MODAL --- */}
       {showAuthModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
-          <div className="bg-white rounded-[2rem] p-8 md:p-12 max-w-md w-full shadow-2xl relative animate-in fade-in zoom-in">
-            <button onClick={() => setShowAuthModal(false)} className="absolute top-6 right-6 text-slate-400 hover:bg-slate-100 p-2 rounded-full"><X size={20} /></button>
-            <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center mb-6"><Lock size={32} className="text-white" /></div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">Restricted Access</h3>
-            <p className="text-slate-500 font-medium mb-8">Enter the master code to authenticate.</p>
+          <div className="bg-white rounded-[2rem] p-6 md:p-12 max-w-md w-full shadow-2xl relative animate-in fade-in zoom-in">
+            <button onClick={() => setShowAuthModal(false)} className="absolute top-4 right-4 md:top-6 md:right-6 text-slate-400 hover:bg-slate-100 p-2 rounded-full"><X size={18} className="md:w-5 md:h-5" /></button>
+            <div className="w-14 h-14 md:w-16 md:h-16 bg-slate-900 rounded-2xl flex items-center justify-center mb-5 md:mb-6"><Lock size={28} className="text-white md:w-8 md:h-8" /></div>
+            <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-2">Restricted Access</h3>
             <form onSubmit={handleLogin}>
-              <div className="mb-6">
-                <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="Secret code" autoFocus className="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-center font-bold tracking-widest outline-none focus:ring-4 focus:border-blue-500" />
-                {authError && <p className="text-red-500 text-sm mt-3 font-bold text-center">{authError}</p>}
+              <div className="mb-5 md:mb-6">
+                <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="Secret code" autoFocus className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 md:px-5 md:py-4 text-center font-bold tracking-widest outline-none focus:ring-4 focus:border-blue-500 mt-3 md:mt-4 text-sm md:text-base" />
+                {authError && <p className="text-red-500 text-xs md:text-sm mt-2 md:mt-3 font-bold text-center">{authError}</p>}
               </div>
-              <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl">Authenticate</button>
+              <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 md:py-4 rounded-xl text-sm md:text-base">Authenticate</button>
             </form>
           </div>
         </div>
       )}
 
-      {/* --- ADD / EDIT SERVICE MODAL --- */}
+      {/* --- ADD / EDIT SERVICE MODAL (Compact & Scrollable) --- */}
       {showFormModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-[2rem] p-6 md:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative animate-in fade-in zoom-in hide-scrollbar">
-            <button onClick={() => setShowFormModal(false)} className="absolute top-4 right-4 text-slate-400 hover:bg-slate-100 p-2 rounded-full"><X size={20} /></button>
-            <h2 className="text-2xl font-bold text-slate-900 mb-5">{isUpdating ? 'Edit Service' : 'Add New Service'}</h2>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 md:p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative animate-in fade-in zoom-in duration-300 hide-scrollbar">
             
-            <form onSubmit={handleFormSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-slate-900 mb-1">Title</label>
-                <input type="text" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 text-sm" required />
-              </div>
+            <button onClick={() => setShowFormModal(false)} className="absolute top-4 right-4 md:top-6 md:right-6 text-slate-400 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-colors">
+              <X size={18} className="md:w-5 md:h-5" />
+            </button>
+            
+            <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-4 md:mb-5 tracking-tight">{isUpdating ? 'Edit Service' : 'Add New Service'}</h2>
+            
+            <form onSubmit={handleFormSubmit} className="space-y-3 md:space-y-4">
               
               <div>
-                <label className="block text-sm font-bold text-slate-900 mb-1">Description</label>
-                <textarea value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} rows="3" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 resize-none text-sm" required />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-bold text-slate-900 mb-1">Icon Name</label>
-                  <select value={formData.iconName} onChange={(e) => setFormData({...formData, iconName: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 text-sm">
-                    <option value="Globe">Globe (Web)</option>
-                    <option value="Layout">Layout (UI)</option>
-                    <option value="Database">Database</option>
-                    <option value="Rocket">Rocket (Deploy)</option>
-                    <option value="Server">Server</option>
-                    <option value="Code2">Code</option>
-                    <option value="Smartphone">Mobile</option>
-                    <option value="PenTool">Design</option>
-                    <option value="Search">Search (SEO)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-slate-900 mb-1">Text Color Class</label>
-                  <input type="text" value={formData.color} onChange={(e) => setFormData({...formData, color: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 text-sm" placeholder="text-blue-500" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-slate-900 mb-1">Bg Color Class</label>
-                  <input type="text" value={formData.bgColor} onChange={(e) => setFormData({...formData, bgColor: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 text-sm" placeholder="bg-blue-50" required />
-                </div>
+                <label className="block text-xs md:text-sm font-bold text-slate-900 mb-1">Service Title *</label>
+                <input type="text" name="title" required value={formData.title} onChange={handleChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 md:px-4 md:py-3 outline-none focus:border-blue-500 text-xs md:text-sm" placeholder="e.g. Full-Stack Development" />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-slate-900 mb-1">Tags (Comma Separated)</label>
-                <input type="text" value={formData.tags} onChange={(e) => setFormData({...formData, tags: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 text-sm" placeholder="React, MySQL, SEO" required />
+                <label className="block text-xs md:text-sm font-bold text-slate-900 mb-1">Description *</label>
+                <textarea name="description" required rows="3" value={formData.description} onChange={handleChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 md:px-4 md:py-3 outline-none focus:border-blue-500 resize-none text-xs md:text-sm" placeholder="Briefly describe the service..."></textarea>
               </div>
 
-              <div className="pt-2">
-                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg">
-                  {isUpdating ? 'Update Service' : 'Add Service'}
+              <div>
+                <label className="block text-xs md:text-sm font-bold text-slate-900 mb-2">Select Icon *</label>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 md:gap-3">
+                  {['Code2', 'Globe', 'Database', 'Smartphone', 'Layout'].map((iconName) => (
+                    <div 
+                      key={iconName}
+                      onClick={() => setFormData({ ...formData, icon: iconName })}
+                      className={`flex flex-col items-center justify-center p-2 md:p-3 rounded-xl border-2 cursor-pointer transition-all ${formData.icon === iconName ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-slate-100 bg-white hover:border-blue-200 text-slate-500'}`}
+                    >
+                      {getIcon(iconName)}
+                      <span className="text-[10px] md:text-xs font-semibold mt-2">{iconName}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-3 md:pt-4 border-t border-slate-100">
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 md:py-3.5 rounded-xl transition-all shadow-lg shadow-blue-600/30 text-sm md:text-base ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                >
+                  {isSubmitting ? 'Saving...' : 'Save Service'}
                 </button>
               </div>
+
             </form>
           </div>
         </div>
       )}
-
     </div>
   );
 };
