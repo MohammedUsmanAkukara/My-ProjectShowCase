@@ -27,7 +27,8 @@ const Projects = () => {
     title: '', category: '', description: '', image: '', tech: '', liveLink: '', adminLink: ''
   });
 
-  const API_URL = 'https://portfolio-backend-31zk.vercel.app';
+  // const API_URL = 'https://portfolio-backend-31zk.vercel.app';
+  const API_URL = 'http://localhost:5000';
 
   // 1. Fetch Data & Check Auth Token
   useEffect(() => {
@@ -103,22 +104,23 @@ const Projects = () => {
     imgData.append('image', file);
     setUploadingImage(true);
 
-
-
     try {
       const res = await axios.post(`${API_URL}/api/upload`, imgData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      alert(res.data)
-      if (res.data.success) {
-        setFormData({ ...formData, image: res.data.url });
+
+      console.log("API Response:", res.data); // Debugging ke liye
+
+      // Yahan res.data.imageUrl use karna hai jo backend bhej raha hai
+      if (res.data.imageUrl) {
+        setFormData({ ...formData, image: res.data.imageUrl });
       }
     } catch (error) {
-      alert('Image upload failed! ', error.message);
+      alert('Image upload failed! ' + error.message);
     } finally {
       setUploadingImage(false);
     }
-  };
+};
 
   // 4. Form Handlers
   const handleChange = (e) => {
