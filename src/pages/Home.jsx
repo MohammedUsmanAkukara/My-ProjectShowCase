@@ -170,9 +170,9 @@ const Home = () => {
 
         {/* Dynamic Title with Responsive Text Size */}
         <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[85px] font-black text-slate-900 tracking-tighter leading-[1.1] mb-6 md:mb-8 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 max-w-4xl">
-          {displayData.title.split(' ').slice(0, -1).join(' ')} <br className="hidden md:block" />
+          {safeTitle.split(' ').slice(0, -1).join(' ')} <br className="hidden md:block" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-            {displayData.title.split(' ').slice(-1)}
+            {safeTitle.split(' ').slice(-1)}
             {/* HIDDEN SECRET TRIGGER (.) */}
             <span onClick={handleSecretClick} className="cursor-default text-transparent select-none">.</span>
           </span>
