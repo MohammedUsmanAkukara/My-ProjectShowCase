@@ -42,7 +42,7 @@ const About = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/about');
+        const response = await axios.get('https://portfolio-backend-31zk.vercel.app/api/about');
         if (response.data.success) {
           setAboutData(response.data.data);
         }
@@ -57,7 +57,7 @@ const About = () => {
       const token = localStorage.getItem('admin_jwt_token');
       if (token) {
         try {
-          await axios.get('http://localhost:5000/api/auth/verify', {
+          await axios.get('https://portfolio-backend-31zk.vercel.app/api/auth/verify', {
             headers: { Authorization: `Bearer ${token}` }
           });
           setIsEditing(true);
@@ -95,7 +95,7 @@ const About = () => {
     setIsAuthLoading(true);
     setAuthError('');
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { passcode });
+      const response = await axios.post('https://portfolio-backend-31zk.vercel.app/api/auth/login', { passcode });
       if (response.data.success) {
         localStorage.setItem('admin_jwt_token', response.data.token);
         setIsEditing(true);
@@ -149,7 +149,7 @@ const About = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('admin_jwt_token');
-      const response = await axios.put('http://localhost:5000/api/about', formData, {
+      const response = await axios.put('https://portfolio-backend-31zk.vercel.app/api/about', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       

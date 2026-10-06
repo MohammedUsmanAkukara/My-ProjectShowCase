@@ -40,7 +40,7 @@ const Contact = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/contact/info');
+        const response = await axios.get('https://portfolio-backend-31zk.vercel.app/api/contact/info');
         if (response.data.success && response.data.data) setContactInfo(response.data.data);
       } catch (error) {
         console.error("Error fetching contact info:", error);
@@ -53,7 +53,7 @@ const Contact = () => {
       const token = localStorage.getItem('admin_jwt_token');
       if (token) {
         try {
-          await axios.get('http://localhost:5000/api/auth/verify', { headers: { Authorization: `Bearer ${token}` } });
+          await axios.get('https://portfolio-backend-31zk.vercel.app/api/auth/verify', { headers: { Authorization: `Bearer ${token}` } });
           setIsEditing(true);
         } catch (error) { localStorage.removeItem('admin_jwt_token'); }
       }
@@ -81,7 +81,7 @@ const Contact = () => {
     e.preventDefault();
     setAuthError('');
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { passcode });
+      const response = await axios.post('https://portfolio-backend-31zk.vercel.app/api/auth/login', { passcode });
       if (response.data.success) {
         localStorage.setItem('admin_jwt_token', response.data.token);
         setIsEditing(true);
@@ -108,7 +108,7 @@ const Contact = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('admin_jwt_token');
-      const response = await axios.put('http://localhost:5000/api/contact/info', editInfoData, { headers: { Authorization: `Bearer ${token}` } });
+      const response = await axios.put('https://portfolio-backend-31zk.vercel.app/api/contact/info', editInfoData, { headers: { Authorization: `Bearer ${token}` } });
       if (response.data.success) {
         setContactInfo(response.data.data);
         setShowEditInfoModal(false);
@@ -122,7 +122,7 @@ const Contact = () => {
     setLoadingInbox(true);
     try {
       const token = localStorage.getItem('admin_jwt_token');
-      const response = await axios.get('http://localhost:5000/api/contact/messages', {
+      const response = await axios.get('https://portfolio-backend-31zk.vercel.app/api/contact/messages', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data.success) {
@@ -151,7 +151,7 @@ const Contact = () => {
     uploadData.append('image', file);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/upload', uploadData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      const res = await axios.post('https://portfolio-backend-31zk.vercel.app/api/upload', uploadData, { headers: { 'Content-Type': 'multipart/form-data' } });
       if (res.data.success) setFormData({ ...formData, attachmentUrl: res.data.url });
     } catch (error) {
       alert('File upload failed!');
@@ -174,7 +174,7 @@ const Contact = () => {
     if (validateForm()) {
       setIsSubmitting(true);
       try {
-        const response = await axios.post('http://localhost:5000/api/contact/message', formData);
+        const response = await axios.post('https://portfolio-backend-31zk.vercel.app/api/contact/message', formData);
         if (response.data.success) {
           setIsModalOpen(true);
           setFormData({ name: '', email: '', message: '', attachmentUrl: '' });

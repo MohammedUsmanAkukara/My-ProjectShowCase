@@ -27,13 +27,13 @@ const Home = () => {
         const fetchData = async () => {
             try {
                 // Fetch Home Data (Skills)
-                const homeRes = await axios.get('http://localhost:5000/api/home');
+                const homeRes = await axios.get('https://portfolio-backend-31zk.vercel.app/api/home');
                 if (homeRes.data.success) {
                     setSkills(homeRes.data.data.skills);
                 }
 
                 // Fetch Latest Projects (Limit to top 3)
-                const projRes = await axios.get('http://localhost:5000/api/projects');
+                const projRes = await axios.get('https://portfolio-backend-31zk.vercel.app/api/projects');
                 if (projRes.data.success) {
                     setLatestProjects(projRes.data.data.slice(0, 3)); // Sirf shuru ke 3 projects
                 }
@@ -48,7 +48,7 @@ const Home = () => {
             const token = localStorage.getItem('admin_jwt_token');
             if (token) {
                 try {
-                    await axios.get('http://localhost:5000/api/auth/verify', {
+                    await axios.get('https://portfolio-backend-31zk.vercel.app/api/auth/verify', {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     setIsEditing(true);
@@ -87,7 +87,7 @@ const Home = () => {
         setIsAuthLoading(true);
         setAuthError('');
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/login', { passcode });
+            const response = await axios.post('https://portfolio-backend-31zk.vercel.app/api/auth/login', { passcode });
             if (response.data.success) {
                 localStorage.setItem('admin_jwt_token', response.data.token);
                 setIsEditing(true);
@@ -115,7 +115,7 @@ const Home = () => {
             // String ko array me convert karna
             const techArray = editSkillsInput.split(',').map((item) => item.trim()).filter(item => item !== "");
 
-            const response = await axios.put('http://localhost:5000/api/home', { skills: techArray }, {
+            const response = await axios.put('https://portfolio-backend-31zk.vercel.app/api/home', { skills: techArray }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

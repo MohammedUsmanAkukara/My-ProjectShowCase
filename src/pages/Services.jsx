@@ -47,7 +47,7 @@ const Services = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/services');
+        const response = await axios.get('https://portfolio-backend-31zk.vercel.app/api/services');
         if (response.data.success) {
           setServices(response.data.data);
         }
@@ -62,7 +62,7 @@ const Services = () => {
       const token = localStorage.getItem('admin_jwt_token');
       if (token) {
         try {
-          await axios.get('http://localhost:5000/api/auth/verify', {
+          await axios.get('https://portfolio-backend-31zk.vercel.app/api/auth/verify', {
             headers: { Authorization: `Bearer ${token}` }
           });
           setIsEditing(true);
@@ -99,7 +99,7 @@ const Services = () => {
     e.preventDefault();
     setAuthError('');
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { passcode });
+      const response = await axios.post('https://portfolio-backend-31zk.vercel.app/api/auth/login', { passcode });
       if (response.data.success) {
         localStorage.setItem('admin_jwt_token', response.data.token);
         setIsEditing(true);
@@ -141,7 +141,7 @@ const Services = () => {
     if (window.confirm("Are you sure you want to delete this service?")) {
       try {
         const token = localStorage.getItem('admin_jwt_token');
-        await axios.delete(`http://localhost:5000/api/services/${id}`, {
+        await axios.delete(`https://portfolio-backend-31zk.vercel.app/api/services/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setServices(services.filter(s => s._id !== id));
@@ -162,13 +162,13 @@ const Services = () => {
 
       if (isUpdating) {
         // Update API
-        const response = await axios.put(`http://localhost:5000/api/services/${currentId}`, payload, {
+        const response = await axios.put(`https://portfolio-backend-31zk.vercel.app/api/services/${currentId}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setServices(services.map(s => s._id === currentId ? response.data.data : s));
       } else {
         // Add API
-        const response = await axios.post('http://localhost:5000/api/services', payload, {
+        const response = await axios.post('https://portfolio-backend-31zk.vercel.app/api/services', payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setServices([...services, response.data.data]);
