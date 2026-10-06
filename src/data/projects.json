@@ -1,26 +1,49 @@
 [
   {
     "id": 1,
-    "title": "Cosmochart - Sci-Fi Navigation",
-    "type": "WEB APP",
-    "tags": ["React", "Three.js", "Web Audio"],
-    "image": "https://source.unsplash.com/random/400x300?space",
-    "link": "#"
+    "title": "Utsav Events Platform",
+    "category": "Luxury Event Management",
+    "description": "A multi-page luxury event management website featuring animated transitions and interactive bento lookbooks.",
+    "image": "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80",
+    "tech": ["React.js", "Tailwind CSS", "Vercel"],
+    "liveLink": "https://utsav-events-demo.vercel.app"
   },
   {
     "id": 2,
-    "title": "Cricmetrics - Professional Analytics",
-    "type": "DASHBOARD",
-    "tags": ["React", "D3.js", "Tailwind CSS"],
-    "image": "https://source.unsplash.com/random/400x300?data",
-    "link": "#"
+    "title": "Retail Inventory & Billing",
+    "category": "Full-Stack Dashboard",
+    "description": "A robust full-stack application for transactional invoice processing, inventory management, and customer/supplier ledger tracking.",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+    "tech": ["React.js", "Node.js", "Express", "MySQL"],
+    "liveLink": "https://retail-billing-demo.com",
+    "adminLink": "https://admin.retail-billing-demo.com"
   },
   {
     "id": 3,
-    "title": "NextGen E-Commerce Suite",
-    "type": "WEB APP",
-    "tags": ["Next.js", "Tailwind CSS"],
-    "image": "https://source.unsplash.com/random/400x300?ecommerce",
-    "link": "#"
+    "title": "Supplimed.in Portal",
+    "category": "Web Development & SEO",
+    "description": "Comprehensive full-stack web development, SEO optimization, and hosting setup for client Imran Bhota.",
+    "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=800&q=80",
+    "tech": ["Full-Stack", "SEO", "Hosting"],
+    "liveLink": "https://supplimed.in"
+  },
+  {
+    "id": 4,
+    "title": "Interactive School Portal",
+    "category": "Frontend Web App",
+    "description": "A dynamic multi-page school website featuring interactive galleries, event listings, and integrated admission forms.",
+    "image": "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80",
+    "tech": ["React", "Framer Motion", "Vercel"],
+    "liveLink": "https://school-portal-demo.vercel.app",
+    "adminLink": "https://admin.school-portal-demo.vercel.app"
+  },
+  {
+    "id": 5,
+    "title": "Dev Showcase Portfolio",
+    "category": "UI/UX & Frontend",
+    "description": "A dynamic web developer project showcase application with modern UI layouts and responsive design.",
+    "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80",
+    "tech": ["Vite", "React", "Tailwind CSS v4"],
+    "liveLink": "https://portfolio-showcase.vercel.app"
   }
 ]
