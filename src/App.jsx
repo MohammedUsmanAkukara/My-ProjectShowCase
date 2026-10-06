@@ -7,10 +7,12 @@ import About from './pages/About';
 import Services from './pages/Services';
 import Projects from './pages/Projects';
 import Contact from './pages/Contact';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="min-h-screen flex flex-col font-sans selection:bg-blue-200 selection:text-blue-900 text-slate-900">
         <Header />
         <div className="flex-grow">
