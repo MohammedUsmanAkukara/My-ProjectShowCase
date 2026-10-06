@@ -27,8 +27,8 @@ const Projects = () => {
     title: '', category: '', description: '', image: '', tech: '', liveLink: '', adminLink: ''
   });
 
-  // const API_URL = 'https://portfolio-backend-31zk.vercel.app';
-  const API_URL = 'http://localhost:5000';
+  const API_URL = 'https://portfolio-backend-31zk.vercel.app';
+  // const API_URL = 'http://localhost:5000';
 
   // 1. Fetch Data & Check Auth Token
   useEffect(() => {
