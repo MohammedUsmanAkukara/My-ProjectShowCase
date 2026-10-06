@@ -103,10 +103,13 @@ const Projects = () => {
     imgData.append('image', file);
     setUploadingImage(true);
 
+
+
     try {
       const res = await axios.post(`${API_URL}/api/upload`, imgData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
+      alert(res.data)
       if (res.data.success) {
         setFormData({ ...formData, image: res.data.url });
       }
