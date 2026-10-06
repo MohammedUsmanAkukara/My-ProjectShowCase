@@ -111,7 +111,7 @@ const Projects = () => {
         setFormData({ ...formData, image: res.data.url });
       }
     } catch (error) {
-      alert('Image upload failed!');
+      alert('Image upload failed! ', error.message);
     } finally {
       setUploadingImage(false);
     }
