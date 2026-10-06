@@ -34,7 +34,7 @@ const Projects = () => {
     setUploadingImage(true);
     try {
       // Backend par image bhejna
-      const res = await axios.post('http://localhost:5000/api/upload', imgData, {
+      const res = await axios.post('https://portfolio-backend-31zk.vercel.app/api/upload', imgData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
@@ -54,7 +54,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/projects');
+        const response = await axios.get('https://portfolio-backend-31zk.vercel.app/api/projects');
         if (response.data.success) {
           setProjects(response.data.data);
         }
@@ -95,7 +95,7 @@ const Projects = () => {
         tech: techArray
       };
 
-      const response = await axios.post('http://localhost:5000/api/projects', payload, {
+      const response = await axios.post('https://portfolio-backend-31zk.vercel.app/api/projects', payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
