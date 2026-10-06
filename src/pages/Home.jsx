@@ -29,6 +29,7 @@ const Home = () => {
   };
   
   const displayData = homeData || fallbackData;
+  const safeTitle = displayData.title;
 
   // 1. Fetch Data & Check Auth Token
   useEffect(() => {
