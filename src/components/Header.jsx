@@ -1,17 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Users, FileText } from 'lucide-react';
 
 const Header = () => {
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false); // Mobile menu state
+  const [isOpen, setIsOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check if admin is logged in
+  useEffect(() => {
+    const token = localStorage.getItem('admin_jwt_token');
+    setIsAdmin(!!token);
+  }, [location]); // Re-check on route change (e.g. after login)
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
+    { name: 'Home',     path: '/' },
+    { name: 'About',    path: '/about' },
     { name: 'Services', path: '/services' },
     { name: 'Projects', path: '/projects' },
-    { name: 'Contact', path: '/contact' }
+    { name: 'Contact',  path: '/contact' }
+  ];
+
+  const adminLinks = [
+    { name: 'Clients',  path: '/clients',  icon: Users },
+    { name: 'Invoices', path: '/invoices', icon: FileText }
   ];
 
   return (
@@ -28,7 +40,7 @@ const Header = () => {
           </Link>
           
           {/* DESKTOP NAV */}
-          <nav className="hidden md:flex space-x-10">
+          <nav className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -40,6 +52,26 @@ const Header = () => {
                 {link.name}
               </Link>
             ))}
+            
+            {/* Admin-only links */}
+            {isAdmin && (
+              <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
+                {adminLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg transition-all ${
+                      location.pathname === link.path
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-blue-600'
+                    }`}
+                  >
+                    <link.icon size={13} />
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            )}
           </nav>
 
           {/* MOBILE HAMBURGER BUTTON */}
@@ -65,7 +97,7 @@ const Header = () => {
             <Link
               key={link.name}
               to={link.path}
-              onClick={() => setIsOpen(false)} // Link click hone par menu band ho jayega
+              onClick={() => setIsOpen(false)}
               className={`text-lg font-bold tracking-wide transition-all p-3 rounded-xl ${
                 location.pathname === link.path 
                   ? 'text-blue-600 bg-blue-50/80' 
@@ -75,6 +107,29 @@ const Header = () => {
               {link.name}
             </Link>
           ))}
+          {/* Mobile Admin Links */}
+          {isAdmin && (
+            <>
+              <div className="pt-2 border-t border-slate-100">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Admin</p>
+                {adminLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-2 text-base font-bold tracking-wide transition-all p-3 rounded-xl ${
+                      location.pathname === link.path
+                        ? 'text-blue-600 bg-blue-50/80'
+                        : 'text-slate-600 hover:text-blue-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    <link.icon size={16} />
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
         </nav>
       </div>
     </header>
